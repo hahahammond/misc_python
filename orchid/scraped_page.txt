@@ -1,0 +1,1293 @@
+<root-cmp ng-version="6.0.4"><div class="ng-view"></div></root-cmp>
+
+<script type="text/ng-template" id="alert-banner-ng2-template">
+    <div id="cookie-alert" class="alert alert-banner" *ngIf="showCookieNotification">
+        <p><span *ngIf="!cookiesEnabled">For full functionality of this site, please enable browser cookies.</span> ORCID uses cookies to improve your experience and to help us understand how you use our websites.  <a href="https://orcid.org/privacy-policy#TrackingTechnology" target="common.cookies.learn_more">
+        Learn more about how we use cookies</a>.</p>
+        <button (click)="dismissCookieNotification()" class="btn btn-primary">Dismiss</button>
+    </div>
+</script> <alert-banner-ng2 ng-version="6.0.4"><!----><div class="alert alert-banner" id="cookie-alert"><p><!----> ORCID uses cookies to improve your experience and to help us understand how you use our websites. <a href="https://orcid.org/privacy-policy#TrackingTechnology" target="common.cookies.learn_more"> Learn more about how we use cookies</a>.</p><button class="btn btn-primary">Dismiss</button></div></alert-banner-ng2>
+
+
+
+<div class="container">
+<script type="text/ng-template" id="header-ng2-template">
+    
+    <div class="row">
+        <div class="search col-md-11 col-md-offset-1 col-sm-12 col-xs-12"
+            id="search" *ngIf="searchVisible == true || settingsVisible == true" >
+            <!-- Search Form  -->               
+            <form id="form-search" (ngSubmit)="searchSubmit()" *ngIf="searchVisible == true">
+                <div id="search-box">
+                    <input type="search" id="searchInput" [(ngModel)]="headerSearch.searchInput" name="searchInput"
+                        (focus)="searchFocus()" (blur)="searchBlur()"
+                        placeholder="Search" />
+                </div>
+
+                <div class="bar">
+                    <fieldset class="search_options" *ngIf="filterActive == true"
+                        >
+                        <input type="radio" name="searchOption" id="filter_registry" [(ngModel)]="headerSearch.searchOption" name="searchOption" (click)="filterChange()"
+                            value="registry" checked /> <label
+                            for="filter_registry">The ORCID Registry</label> 
+                        <input type="radio" name="searchOption" (click)="filterChange()"id="filter_website" [(ngModel)]="headerSearch.searchOption" value="website" /> <label for="filter_website">The ORCID Website</label>
+                    </fieldset>
+                </div>
+
+
+                <div class="conditions" *ngIf="conditionsActive == true" >
+                    <p>                         
+                        Your use of the Registry and the results of your search are subject to ORCID's <a
+                            href="https://orcid.org/legal">Terms and Conditions of Use</a>                    </p>
+                </div>
+
+                <div class="top-buttons">
+                    <button type="submit" class="search-button">
+                        <i class="icon-orcid-search"></i>
+                    </button>
+                    <a href="/orcid-search/search"
+                    class="settings-button" title="Advanced Search"><i class="glyphicon glyphicon-cog"></i></a>
+                </div>
+            </form>
+            <div class="language-selector" *ngIf="settingsVisible == true">
+                <!-- Shared component -->
+            
+                <language-ng2></language-ng2>
+                
+                <div class="account-settings-mobile-menu">
+                    <span class="account-settings-mobile"> 
+                        <a  href="/account">
+Account Settings                        </a>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row flexbox-container">         
+            <div class="col-md-9 col-sm-9 col-sm-push-3 col-md-push-3 navigation public">
+                
+                <!-- Mobile View -->
+                <a id="mobile-menu-icon" class="mobile-button mobile-menu-icon hidden-md hidden-lg hidden-sm visible-xs"
+                   (click)="toggleMenu()" [ngClass]="{'mobile-menu-active': menuVisible == true}">
+                    <span class="glyphicon glyphicon-align-justify"></span>
+                </a>                                
+                <a href="https://orcid.org" id="logo-mini" class="pull-left"></a>
+                <a id="mobile-settings" class="mobile-button mobile-settings" (click)="toggleSettings()" [ngClass]="{'mobile-menu-active': settingsVisible == true}">
+                    <span class="glyphicon glyphicon-cog"></span>
+                </a>
+                <a id="mobile-search" class="mobile-button mobile-search" (click)="toggleSearch()" [ngClass]="{'mobile-menu-active': searchVisible == true}">
+                    <span class="glyphicon glyphicon-search"></span>
+                </a>
+                <a href="/signin" id="mobile-sign-in" class="mobile-button mobile-sign-in">
+                    <span class="glyphicon glyphicon-user"></span>
+                </a>
+                
+                
+                <!-- Desktop / Tablet View -->
+                <ul class="menu public" *ngIf="menuVisible == true" (window:resize)="onResize($event)">
+                    <li class="active-trail"><a href="/my-orcid">Edit your record</a></li>
+                    <li><a href="/about">About ORCID</a></li>
+                    <li><a href="/help/contact-us">Contact us</a></li>
+                    <li><a href="/help">Help</a></li>
+                </ul> 
+            </div>
+<!--drupal menu-->
+        <div class="col-md-3 col-sm-3 col-sm-pull-9 col-md-pull-9 reset logo">
+            <h1>
+                <a href="https://orcid.org"><img
+                    src="//orcid.org/static/release-1.251.0/img/orcid-logo.png" alt="ORCID logo" /></a>
+            </h1>
+            <p>Connecting Research and Researchers</p>
+        </div>
+        <p class="see-more">5,855,271 ORCID iDs and counting. <a href="/statistics"
+             title="">See more...</a>
+        </p>
+    </div><!-- .row -->
+    
+</script>
+<script type="text/ng-template" id="language-ng2-template"> 
+    <form id="language-form" action="#">
+        <select
+            *ngIf="languages"
+            name="language-codes" id="language-codes"
+            [(ngModel)]="language" 
+            (ngModelChange)="selectedLanguage()"
+        >
+            <option 
+                *ngFor="let languageOpt of languages"
+                [value]="languageOpt.value"
+                [selected]="languageOpt.value == language.value"
+            >
+                {{languageOpt.label}}   
+            </option>             
+            
+        </select>
+    </form>                     
+</script>
+<div class="header center">
+<header-ng2 ng-version="6.0.4"><div class="row"><!----><div class="search col-md-11 col-md-offset-1 col-sm-12 col-xs-12" id="search"><!----><form id="form-search" novalidate="" class="ng-untouched ng-pristine ng-valid"><div id="search-box"><input id="searchInput" name="searchInput" placeholder="Search" type="search" class="ng-untouched ng-pristine ng-valid"></div><div class="bar"><!----></div><!----><div class="top-buttons"><button class="search-button" type="submit"><i class="icon-orcid-search"></i></button><a class="settings-button" href="/orcid-search/search" title="Advanced Search"><i class="glyphicon glyphicon-cog"></i></a></div></form><!----><div class="language-selector"><language-ng2><form action="#" id="language-form" novalidate="" class="ng-untouched ng-pristine ng-valid"><!----><select id="language-codes" name="language-codes" class="ng-untouched ng-pristine ng-valid"><!----><option value="ar"> &#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577; </option><option value="cs"> &#269;e&#353;tina </option><option value="en"> English </option><option value="es"> Espa&#241;ol </option><option value="fr"> Fran&#231;ais </option><option value="it"> Italiano </option><option value="ja"> &#26085;&#26412;&#35486; </option><option value="ko"> &#54620;&#44397;&#50612; </option><option value="pt"> Portugu&#234;s </option><option value="ru"> &#1056;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081; </option><option value="zh_CN"> &#31616;&#20307;&#20013;&#25991; </option><option value="zh_TW"> &#32321;&#39636;&#20013;&#25991; </option></select></form></language-ng2><div class="account-settings-mobile-menu"><span class="account-settings-mobile"><a href="/account">
+Account Settings </a></span></div></div></div></div><div class="row flexbox-container"><div class="col-md-9 col-sm-9 col-sm-push-3 col-md-push-3 navigation public"><a class="mobile-button mobile-menu-icon hidden-md hidden-lg hidden-sm visible-xs mobile-menu-active" id="mobile-menu-icon"><span class="glyphicon glyphicon-align-justify"></span></a><a class="pull-left" href="https://orcid.org" id="logo-mini"></a><a class="mobile-button mobile-settings mobile-menu-active" id="mobile-settings"><span class="glyphicon glyphicon-cog"></span></a><a class="mobile-button mobile-search mobile-menu-active" id="mobile-search"><span class="glyphicon glyphicon-search"></span></a><a class="mobile-button mobile-sign-in" href="/signin" id="mobile-sign-in"><span class="glyphicon glyphicon-user"></span></a><!----><ul class="menu public"><li class="active-trail"><a href="/my-orcid">Edit your record</a></li><li><a href="/about">About ORCID</a></li><li><a href="/help/contact-us">Contact us</a></li><li><a href="/help">Help</a></li></ul></div><div class="col-md-3 col-sm-3 col-sm-pull-9 col-md-pull-9 reset logo"><h1><a href="https://orcid.org"><img alt="ORCID logo" src="//orcid.org/static/release-1.251.0/img/orcid-logo.png"></a></h1><p>Connecting Research and Researchers</p></div><p class="see-more">5,855,271 ORCID iDs and counting. <a href="/statistics" title="">See more...</a></p></div></header-ng2>
+</div>
+<div id="main" role="main" class="main">
+<div class="row  public-profile">
+<div class="col-md-3 lhs left-aside">
+<div class="workspace-left workspace-profile">
+<script type="text/ng-template" id="id-banner-ng2-template">
+
+
+    <div class="id-banner "> 
+        
+        <!-- Name -->
+
+
+        <h2 class="full-name">                  
+            {{displayName}}              
+        </h2>  
+
+        <div class="oid">
+            <div class="id-banner-header">
+                <span>ORCID iD</span>
+            </div>
+            <div class="orcid-id-container">
+                <div class="orcid-id-options">
+                    <div class="orcid-id-info">
+                        <span class="mini-orcid-icon-16"></span>
+                        <span id="orcid-id" class="orcid-id-https">https://orcid.org/0000-0001-6023-9062</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+            <switch-user-ng2></switch-user-ng2> 
+    </div>
+</script>
+<script type="text/ng-template" id="name-ng2-template">
+    <!-- Name -->    
+    <div class="workspace-section" id="names-section"> 
+        <div *ngIf="!showEdit" (click)="toggleEdit()">
+            <div class="row">               
+                <div class="col-md-12">
+                    <div class="workspace-section-title">
+                        <div class="edit-name edit-option" *ngIf="!showEdit" id="open-edit-names">
+                            <div class="glyphicon glyphicon-pencil">
+                                <div class="popover popover-tooltip top">
+                                    <div class="arrow"></div>
+                                    <div class="popover-content">
+                                        <span>Edit name</span>
+                                    </div>                
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        <!-- Edit Mode -->
+        <div class="names-edit" *ngIf="showEdit == true">
+
+            <label for="firstName">First Name</label>
+           
+            <input type="text" [(ngModel)]="nameForm.givenNames.value" (keydown)="setNameFormEnter($event)" class="full-width-input" />
+           
+            <span class="orcid-error" *ngIf="nameForm?.givenNames?.errors?.length > 0">
+                <div *ngFor='let error of nameForm.givenNames.errors'>{{error}}</div>
+            </span>
+            <label for="lastName">Last Name</label>
+           
+            <input type="text" [(ngModel)]="nameForm.familyName.value" (keydown)="setNameFormEnter($event)" class="full-width-input" />
+           
+            <label for="creditName">Published Name</label>                               
+            <input type="text" [(ngModel)]="nameForm.creditName.value" (keydown)="setNameFormEnter($event)" class="full-width-input" />
+           
+            <div>
+                <privacy-toggle-ng2 
+                    [dataPrivacyObj]="nameForm" 
+                    (privacyUpdate)="privacyChange($event)"
+                    elementId="name-privacy-toggle" 
+                    privacyNodeName="visibility" 
+                ></privacy-toggle-ng2>
+
+                <a href="https://support.orcid.org/hc/articles/360006973853"><i class="glyphicon glyphicon-question-sign help-glyphicon" style="width: 14px;"></i></a>
+            </div>
+            <ul class="workspace-section-toolbar clearfix">
+                <li class="pull-right">
+                    <button class="btn btn-primary" (click)="setNameForm( true )">Save changes</button>
+                </li>
+                <li class="pull-right">
+                    <a class="cancel-option" (click)="cancel()">Cancel</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</script>
+<script type="text/ng-template" id="switch-user-ng2-template">
+</script> <id-banner-ng2 ng-version="6.0.4"><div class="id-banner "><h2 class="full-name">  </h2><div class="oid"><div class="id-banner-header"><span>ORCID iD</span></div><div class="orcid-id-container"><div class="orcid-id-options"><div class="orcid-id-info"><span class="mini-orcid-icon-16"></span><span class="orcid-id-https" id="orcid-id">https://orcid.org/0000-0001-6023-9062</span></div></div></div></div><switch-user-ng2></switch-user-ng2></div></id-banner-ng2>
+<script type="text/ng-template" id="print-record-ng2-template">
+    <div class="print-orcid-record">
+                    <a id="printRecord" (click)="printRecord('https://orcid.org/0000-0001-6023-9062/print')">
+            <span class="glyphicon glyphicon-print"></span> Print view</a>
+            <div class="popover-help-container">
+                <i class="glyphicon glyphicon-question-sign"></i>
+                <div id="print-help" class="popover bottom">
+                    <div class="arrow"></div>
+                    <div class="popover-content">
+                        <p>Open a version of this ORCID record formatted for printing.</p>
+                    </div>
+                </div>
+            </div>  
+    </div>
+</script>
+<print-record-ng2 ng-version="6.0.4"><div class="print-orcid-record"><a id="printRecord"><span class="glyphicon glyphicon-print"></span> Print view</a><div class="popover-help-container"><i class="glyphicon glyphicon-question-sign"></i><div class="popover bottom" id="print-help"><div class="arrow"></div><div class="popover-content"><p>Open a version of this ORCID record formatted for printing.</p></div></div></div></div></print-record-ng2>
+
+<script type="text/ng-template" id="public-record-ng2-template">    
+    <ng-container *ngIf="personData">
+        <!-- Other Names -->
+            <div *ngIf="personData.publicGroupedOtherNames && objectKeys(personData.publicGroupedOtherNames).length > 0" class="workspace-section">
+                <div class="workspace-section-header">
+                    <ul class="inline-list visible workspace-section-heading">
+                        <li><span class="workspace-section-title">Also known as</span></li>
+                        <li class="right">                                  
+                            <span (click)="toggleSourcesDisplay('other-names')" class="right toggle" (mouseenter)="showPopover('other-names')" (mouseleave)="hidePopover('other-names')">
+                                <i [ngClass]="(showSources['other-names'] || showSources['other-names'] == 'null')? 'glyphicons collapse_top relative' : 'glyphicons expand relative'"></i>
+                                <div class="popover top" [ngClass]="{'block' : popoverShowing['other-names']}">
+                                    <div class="arrow"></div>
+                                    <div class="popover-content">
+                                        <span *ngIf="showSources['other-names'] == false  || showSources['other-names'] == null">Show details</span>
+                                        <span *ngIf="showSources['other-names']">Hide details</span>
+                                    </div>
+                                </div>                                          
+                            </span>                                                                             
+                        </li>                               
+                    </ul>
+                </div>
+                <div id="public-other-names-div" class="public-content">
+                        <ng-container  *ngFor="let otherName of objectKeys(personData.publicGroupedOtherNames); let lastName = last;">
+                            <span  name="other-name">{{otherName}}</span>
+                            <span *ngIf="!lastName && (showSources['other-names'] == false || showSources['other-names'] == null)">, </span>
+
+                            <div *ngIf="showSources['other-names']" class="source-line separator">
+                                <p>Sources:<br />
+                                    <ng-container  *ngFor="let otherNameSource of personData.publicGroupedOtherNames[otherName]; let lastSource = last;">
+
+                                        <ng-container>
+                                            {{otherNameSource?.source?.sourceName?.content || otherNameSource?.source?.sourceOrcid?.path}}
+                                        </ng-container>
+
+                                         <ng-container  *ngIf="otherNameSource.createdDate">
+                                            {{otherNameSource.createdDate.value | ajaxTickDateToISO8601 }}
+                                         </ng-container> 
+
+                                         <ng-container *ngIf="!lastSource">,
+                                         </ng-container>
+
+                                    </ng-container>
+                                </p>
+                            </div>
+                        </ng-container>
+                </div>
+            </div>    
+        
+        <!-- Websites -->                       
+            <div *ngIf="personData && objectKeys(personData.publicGroupedResearcherUrls).length > 0" class="workspace-section">
+                <div class="workspace-section-header">
+                    <ul class="inline-list visible workspace-section-heading">
+                        <li><span class="workspace-section-title">Websites</span></li>
+                        <li class="right">
+                            <span (click)="toggleSourcesDisplay('websites')" class="right toggle" (mouseenter)="showPopover('websites')" (mouseleave)="hidePopover('websites')">
+                                <i [ngClass]="(showSources['websites'] || showSources['websites'] == 'null')? 'glyphicons collapse_top' : 'glyphicons expand'"></i>
+                                <div class="popover top" [ngClass]="{'block' : popoverShowing['websites']}">
+                                    <div class="arrow"></div>
+                                    <div class="popover-content">
+                                        <span *ngIf="showSources['websites'] == false  || showSources['websites'] == null">Show details</span>
+                                        <span *ngIf="showSources['websites']">Hide details</span>
+                                    </div>
+                                </div>
+                            </span>
+                        </li>                               
+                    </ul>
+                    <div id="public-researcher-urls-div" class="public-content">
+                        <ng-container  *ngFor="let url of objectKeys(personData.publicGroupedResearcherUrls); let lastUrl = last;">
+                            <a href="{{personData.publicGroupedResearcherUrls[url].content || url}}" target="{{personData.publicGroupedResearcherUrls[url].urlName || url}}" rel="me nofollow">
+                                {{personData.publicGroupedResearcherUrls[url][0].urlName || url}}
+                            </a>                                
+                            <div *ngIf="showSources['websites']" class="source-line separator">                                        
+                                <p>Sources:<br />
+                                    <ng-container  *ngFor="let urlSource of personData.publicGroupedResearcherUrls[url]; let lastSource = last;">
+                                        <ng-container>
+                                            {{urlSource?.source?.sourceName?.content || urlSource?.source?.sourceOrcid?.path}}
+                                        </ng-container>
+                                        <ng-container *ngIf="urlSource.createdDate">
+                                            {{urlSource.createdDate.value | ajaxTickDateToISO8601 }}
+                                        </ng-container>
+                                        <ng-container *ngIf="!lastSource">,
+                                        </ng-container>
+                                    </ng-container>
+                                </p>                                                                                                                                                        
+                            </div>  
+                           <br *ngIf="!lastUrl" />
+                        </ng-container>
+                    </div>
+                </div>
+            </div>
+       
+        <!-- Countries -->                                 
+            <div *ngIf="personData.publicGroupedAddresses && objectKeys(personData.publicGroupedAddresses).length > 0" class="workspace-section">
+                <div class="workspace-section-header">
+                    <ul class="inline-list visible workspace-section-heading">
+                        <li><span class="workspace-section-title">Country</span></li>                                   
+                            <li class="right">                  
+                                <span (click)="toggleSourcesDisplay('countries')" class="right toggle" (mouseenter)="showPopover('countries')" (mouseleave)="hidePopover('countries')">
+                                    <i [ngClass]="(showSources['countries'] || showSources['countries'] == 'null')? 'glyphicons collapse_top' : 'glyphicons expand'"></i>
+                                    <div class="popover top" [ngClass]="{'block' : popoverShowing['countries']}">
+                                        <div class="arrow"></div>
+                                        <div class="popover-content">
+                                            <span *ngIf="showSources['countries'] == false  || showSources['countries'] == null">Show details</span>
+                                            <span *ngIf="showSources['countries']">Hide details</span>
+                                        </div>
+                                    </div>
+                                </span>                                     
+                            </li>
+                    </ul>                               
+                    <div id="public-country-div" class="public-content">
+                        <ng-container  *ngFor="let address of objectKeys(personData.publicGroupedAddresses); let lastAddress = last;">
+                            <span name="country">{{personData.countryNames[address]}}</span>
+                            
+                            <span *ngIf="!lastAddress && (showSources['countries'] == false || showSources['countries'] == null)">,
+                            </span>   
+
+                            <div *ngIf="showSources['countries']" class="source-line separator">
+                                <p>Sources:<br />
+
+                                    <ng-container  *ngFor="let addressSource of personData.publicGroupedAddresses[address]; let lastSource = last;">
+
+                                        <ng-container>
+                                            {{addressSource?.source?.sourceName?.content || addressSource?.source?.sourceOrcid?.path}}
+                                        </ng-container>
+
+                                         <ng-container  *ngIf="addressSource.createdDate">
+                                            {{addressSource.createdDate.value | ajaxTickDateToISO8601 }}
+                                         </ng-container>
+
+                                         <ng-container *ngIf="!lastSource">, 
+                                         </ng-container>
+
+                                    </ng-container>
+                                </p>
+                            </div>
+                        </ng-container>
+                    </div>
+                </div>
+            </div>
+        <!-- Keywords -->
+            <div  *ngIf="personData.publicGroupedKeywords && objectKeys(personData.publicGroupedKeywords).length > 0" class="workspace-section">
+                <div class="workspace-section-header">
+                    <ul class="inline-list visible workspace-section-heading">
+                        <li><span class="workspace-section-title">Keywords</span></li>
+                        <li class="right">                                      
+                            <span (click)="toggleSourcesDisplay('keywords')" class="right toggle" (mouseenter)="showPopover('keywords')" (mouseleave)="hidePopover('keywords')">
+                                <i [ngClass]="(showSources['keywords'] || showSources['keywords'] == 'null')? 'glyphicons collapse_top' : 'glyphicons expand'"></i>
+                                <div class="popover top" [ngClass]="{'block' : popoverShowing['keywords']}">
+                                    <div class="arrow"></div>
+                                    <div class="popover-content">
+                                        <span *ngIf="showSources['keywords'] == false  || showSources['keywords'] == null">Show details</span>
+                                        <span *ngIf="showSources['keywords']">Hide details</span>
+                                    </div>
+                                </div>
+                            </span>
+                        </li>                               
+                    </ul>   
+                    <div id="public-keywords-div" class="public-content">   
+                        <ng-container  *ngFor="let keyword of objectKeys(personData.publicGroupedKeywords); let lastkeyword = last;">
+                            <span  name="keywords">{{keyword}}</span>
+                            <span *ngIf="!lastkeyword && (showSources['keywords'] == false || showSources['keywords'] == null)">, </span>
+
+                            <div *ngIf="showSources['keywords']" class="source-line separator">
+                                <p>Sources:<br />
+                                    <ng-container  *ngFor="let keywordSource of personData.publicGroupedKeywords[keyword]; let lastSource = last;">
+
+                                        <ng-container>
+                                            {{keywordSource?.source?.sourceName?.content || keywordSource?.source?.sourceOrcid?.path}}
+                                        </ng-container>
+
+                                         <ng-container  *ngIf="keywordSource.createdDate">
+                                            {{keywordSource.createdDate.value | ajaxTickDateToISO8601 }}
+                                         </ng-container>
+
+                                         <ng-container *ngIf="!lastSource">, 
+                                         </ng-container>
+
+                                    </ng-container>
+                                </p>
+                            </div>
+                        </ng-container>                               
+                    </div>
+                </div>
+            </div>
+        <!-- External Identifiers -->
+            <div *ngIf="personData.publicGroupedPersonExternalIdentifiers && objectKeys(personData.publicGroupedPersonExternalIdentifiers).length > 0" class="workspace-section">
+                <div class="workspace-section-header">
+                    <ul class="inline-list visible workspace-section-heading">
+                        <li><span class="workspace-section-title">Other IDs</span></li>
+                        <li class="right">
+                            <span (click)="toggleSourcesDisplay('external-identifiers')" class="right toggle" (mouseenter)="showPopover('external-identifiers')" (mouseleave)="hidePopover('external-identifiers')">
+                                <i [ngClass]="(showSources['external-identifiers'] || showSources['external-identifiers'] == 'null')? 'glyphicons collapse_top' : 'glyphicons expand'"></i>
+                                <div class="popover top" [ngClass]="{'block' : popoverShowing['external-identifiers']}">
+                                    <div class="arrow"></div>
+                                    <div class="popover-content">
+                                        <span *ngIf="showSources['external-identifiers'] == false  || showSources['external-identifiers'] == null">Show details</span>
+                                        <span *ngIf="showSources['external-identifiers']">Hide details</span>
+                                    </div>
+                                </div>
+                            </span>                                     
+                        </li>                               
+                    </ul>                               
+                    <div id="public-external-identifiers-div" class="public-content">
+                        <ng-container  *ngFor="let external of objectKeys(personData.publicGroupedPersonExternalIdentifiers); let lastExternal = last; let firstExternal = first;">
+                            <ng-container  *ngFor="let externalIdentifier of personData.publicGroupedPersonExternalIdentifiers[external]; let firstExternalIdentifier = first;">
+                                <ng-container *ngIf="firstExternalIdentifier">
+
+                                    <a href="{{externalIdentifier.url.value}}" 
+                                        target="externalIdentifier.value">
+                                        {{externalIdentifier.type}}: {{externalIdentifier.value}}
+                                    </a>
+                                    
+                                    <ng-container *ngIf="lastExternal">
+                                        <br/><span *ngIf="showSources['external-identifiers'] == false || showSources['external-identifiers'] == null"></span>
+                                    </ng-container>
+
+                                </ng-container>
+
+                                    <div *ngIf="showSources['external-identifiers']" class="source-line separator">                                                                                                                            
+                                        <p>Sources:<br />
+                                            {{externalIdentifier?.source?.sourceName?.content || externalIdentifier?.source?.sourceClientId?.path }}
+                                            {{externalIdentifier.createdDate.value | ajaxTickDateToISO8601 }}
+                                        </p>
+                                    </div>
+                            </ng-container>
+                        </ng-container>  
+                    </div>
+                </div>
+            </div>    
+        <!-- Email -->
+       
+            <div *ngIf="personData.publicGroupedEmails && objectKeys(personData.publicGroupedEmails).length > 0" class="workspace-section">
+                <div class="workspace-section-header">
+                    <ul class="inline-list visible workspace-section-heading">
+                        <li><span class="workspace-section-title">Email</span></li>
+                        <li class="right">                                      
+                            <span (click)="toggleSourcesDisplay('emails')" class="right toggle" (mouseenter)="showPopover('emails')" (mouseleave)="hidePopover('emails')">
+                                <i [ngClass]="(showSources['emails'] || showSources['emails'] == 'null')? 'glyphicons collapse_top' : 'glyphicons expand'"></i>
+                                <div class="popover top" [ngClass]="{'block' : popoverShowing['emails']}">
+                                    <div class="arrow"></div>
+                                    <div class="popover-content">
+                                        <span *ngIf="showSources['emails'] == false  || showSources['emails'] == null">Show details</span>
+                                        <span *ngIf="showSources['emails']">Hide details</span>
+                                    </div>
+                                </div>
+                            </span>
+                        </li>                               
+                    </ul>                               
+                    <div class="public-content" id="public-emails-div">
+                        <ng-container  *ngFor="let email of objectKeys(personData.publicGroupedEmails); let lastEmail = last;">
+                            <div name="email">{{email}}</div>                                
+                            <div *ngIf="showSources['emails']" class="source-line separator">                                        
+                                <p>Sources:<br />
+                                    <ng-container  *ngFor="let emailSource of personData.publicGroupedEmails[email]; let lastSource = last;">
+                                        <ng-container>
+                                            {{emailSource?.source?.sourceName?.content || emailSource?.source?.sourceOrcid?.path}}
+                                        </ng-container>
+                                        <ng-container *ngIf="emailSource.createdDate">
+                                            {{emailSource.createdDate.value | ajaxTickDateToISO8601 }}
+                                        </ng-container>
+                                        <ng-container *ngIf="!lastSource">, 
+                                        </ng-container>
+                                    </ng-container>
+                                </p>                                                                                                                                                        
+                            </div>  
+                        </ng-container>
+                    </div>                              
+                </div>
+            </div>
+
+        </ng-container>
+
+
+</script>
+<public-record-ng2 ng-version="6.0.4"><!----></public-record-ng2>
+</div>
+</div>
+<div class="col-md-9 right-aside">
+<div class="workspace-right">
+<div class="workspace-inner-public workspace-public workspace-accordion">
+<script type="text/ng-template" id="bio-ng2-template">
+
+        <div *ngIf="bio" class="workspace-accordion-content">
+        <div class="row bottomBuffer">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <h3 class="workspace-title">Biography</h3>
+            </div>
+        </div>          
+        <div class="row bottomBuffer">                  
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="bio-content">{{bio}}</div>                                  
+            </div>
+        </div>                          
+    </div>
+</script> <bio-ng2 ng-version="6.0.4"><!----></bio-ng2>
+
+
+<script type="text/ng-template" id="works-ng2-template">
+    <!--WORKS-->
+    <div id="workspace-publications" class="workspace-accordion-item workspace-accordion-active">
+        <!--Works section header--> 
+        <div class="workspace-accordion-header clearfix">
+            <div class="row">
+                            <div class="col-md-3 col-sm-3 col-xs-12">
+                    <div>
+                        <a (click)="toggleSectionDisplay($event)" class="toggle-text">
+                           <i class="glyphicon-chevron-down glyphicon x075" [ngClass]="{'glyphicon-chevron-right':workspaceSrvc.displayWorks==false}"></i>
+                           Works (<span>{{worksService.groupsLabel}}</span>)
+                        </a>
+                    </div>
+                </div>
+                    <div class="col-md-9 col-sm-9 col-xs-12 action-button-bar" *ngIf="workspaceSrvc.displayWorks">
+                    <!--Sort menu-->
+                    <div class="menu-container">                                     
+                        <ul class="toggle-menu">
+                            <li>
+                                <span class="glyphicon glyphicon-sort"></span>
+Sort                                <ul class="menu-options sort">
+                                    <li [ngClass]="{'checked':sortState.predicateKey=='date'}" *ngIf="!(sortHideOption || sortState.type == 'affiliation')">                                          
+                                        <a (click)="sort('date');" class="action-option manage-button">
+Date                                            <span *ngIf="sortState.reverseKey['date']" [ngClass]="{'glyphicon glyphicon-sort-by-order-alt':sortState.predicateKey=='date'}"></span>
+                                            <span *ngIf="sortState.reverseKey['date'] == false" [ngClass]="{'glyphicon glyphicon-sort-by-order':sortState.predicateKey=='date'}"></span>
+                                        </a>                                                                                    
+                                    </li>
+                                    <li [ngClass]="{'checked':sortState.predicateKey=='groupName'}" *ngIf="sortHideOption != null">
+                                        <a (click)="sort('groupName');" class="action-option manage-button">
+Title                                            <span *ngIf="sortState.reverseKey['groupName']" [ngClass]="{'glyphicon glyphicon-sort-by-alphabet-alt':sortState.predicateKey=='groupName'}" ></span>
+                                            <span *ngIf="sortState.reverseKey['groupName'] == false" [ngClass]="{'glyphicon glyphicon-sort-by-alphabet':sortState.predicateKey=='groupName'}" ></span>
+                                        </a>                                            
+                                    </li>
+                                    <li [ngClass]="{'checked':sortState.predicateKey=='title'}" *ngIf="!sortHideOption">                                            
+                                        <a (click)="sort('title');" class="action-option manage-button">
+Title                                            <span *ngIf="sortState.reverseKey['title']" [ngClass]="{'glyphicon glyphicon-sort-by-alphabet-alt':sortState.predicateKey=='title'}" ></span>
+                                            <span *ngIf="sortState.reverseKey['title'] == false" [ngClass]="{'glyphicon glyphicon-sort-by-alphabet':sortState.predicateKey=='title'}" ></span>
+                                        </a>                                            
+                                    </li>
+                                    <li [ngClass]="{'checked':sortState.predicateKey=='type'}" *ngIf="!(sortHideOption || sortState.type == 'affiliation')">                                          
+                                        <a (click)="sort('type');" class="action-option manage-button">
+Type                                            <span *ngIf="sortState.reverseKey['type']" [ngClass]="{'glyphicon glyphicon-sort-by-alphabet-alt':sortState.predicateKey=='type'}"></span>
+                                            <span *ngIf="sortState.reverseKey['type'] == false" [ngClass]="{'glyphicon glyphicon-sort-by-alphabet':sortState.predicateKey=='type'}"></span>
+                                        </a>                                                                                        
+                                    </li>
+                                </ul>                                           
+                            </li>
+                        </ul>                                   
+                    </div>
+                    <!--End sort menu-->
+                </div>
+            </div>
+        </div>
+        <!--End works section header-->
+        <!-- Work Import Wizard -->
+        <div *ngIf="workImportWizard" class="work-import-wizard">
+            <div class="ie7fix-inner">
+                <div class="row"> 
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <h1 class="lightbox-title wizard-header">Link Works</h1>
+                        <span (click)="showWorkImportWizard()" class="close-wizard">Hide link works</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <p class="wizard-content">
+                            ORCID works with our member organizations to make it easy to connect your ORCID iD and link to information in their records. Choose one of the link wizards to get started. <a target="workspace.LinkResearchActivities.description.more_info" href="https://support.orcid.org/hc/en-us/articles/360006973653-Add-works-by-direct-import-from-other-systems"> More information about linking works </a>
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div id="workFilters">
+                        <form class="form-inline">
+                            <div class="col-md-5 col-sm-5 col-xs-12">
+                                <div class="form-group">
+                                    <label for="work-type">Work type</label> 
+                                    <select id="work-type" name="work-type" [(ngModel)]="selectedWorkType">
+                                        <option *ngFor="let wt of workType">{{wt}}</option>
+                                    </select> 
+                                </div> 
+                            </div>
+                            <div class="col-md-7 col-sm-7 col-xs-12">
+                                <div class="form-group geo-area-group">
+                                    <label for="geo-area">Geographical area</label>
+                                    <select id="geo-area" name="geo-area" [(ngModel)]="selectedGeoArea">
+                                        <option *ngFor="let ga of geoArea">{{ga}}</option>
+                                    </select>   
+                                </div>
+                            </div>  
+                        </form>
+                        <hr />
+                    </div>
+                </div>         
+                <div class="row wizards">               
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div *ngFor="let wtw of workImportWizardsOriginal | orderBy: 'name' | filterImportWizards : selectedWorkType : selectedGeoArea; let index = index; let first = first; let last = last;">
+                            <strong><a (click)="openImportWizardUrlFilter('/oauth/authorize', wtw)">{{wtw.name}}</a></strong>
+
+                            <br />                                                                                    
+                            <div class="justify">                       
+                                <p class="wizard-description" [ngClass]="{'ellipsis-on' : wizardDescExpanded[wtw.id] == false || wizardDescExpanded[wtw.id] == null}">
+                                    {{wtw.description}}
+                                    <a (click)="toggleWizardDesc(wtw.id)" *ngIf="wizardDescExpanded[wtw.id]"><span class="glyphicon glyphicon-chevron-right wizard-chevron"></span></a>
+                                </p>                        
+                                <a (click)="toggleWizardDesc(wtw.id)" *ngIf="wizardDescExpanded[wtw.id] == false || wizardDescExpanded[wtw.id] == null" class="toggle-wizard-desc"><span class="glyphicon glyphicon-chevron-down wizard-chevron"></span></a>
+                            </div>
+                            <hr/>
+                        </div>
+                    </div>
+                </div>
+            </div>            
+        </div>
+        <!--End import wizard-->
+        <!-- Bulk Edit -->  
+        <div *ngIf="bulkEditShow && workspaceSrvc.displayWorks" >           
+            <div class="bulk-edit">
+                <div class="row">
+                    <div class="col-md-7 col-sm-7 col-xs-12">
+                        <h4>Bulk edit</h4><span class="hide-bulk" (click)="toggleBulkEdit()">Hide bulk edit</span>
+                        <ol>
+                            <li>Select works: Click the checkbox beside each work. Use the checkbox to the right to select or deselect all.</li>
+                            <li>Select editing action: Click the trash can to delete all selected works or click a visibility setting to apply that setting to all selected works.</li>
+                        </ol>
+                    </div>
+                    <div class="col-md-5 col-sm-5 col-xs-12">
+                        <ul class="bulk-edit-toolbar">
+                            <li class="bulk-edit-toolbar-item work-multiple-selector">
+                                <label>SELECT</label>
+                                <div id="custom-control-x">
+                                    <div class="custom-control-x" > 
+                                        <div class="dropdown-custom-menu" id="dropdown-custom-menu" (click)="toggleSelectMenu();$event.stopPropagation()">                  
+                                            <span class="custom-checkbox-parent">
+                                                <div class="custom-checkbox" id="custom-checkbox" (click)="swapbulkChangeAll();$event.stopPropagation();" [ngClass]="{'custom-checkbox-active':bulkChecked}"></div>
+                                            </span>                   
+                                            <div class="custom-control-arrow" (click)="toggleSelectMenu(); $event.stopPropagation()"></div>                            
+                                        </div>
+                                        <div>
+                                            <ul class="dropdown-menu" role="menu" id="special-menu" [ngClass]="{'block': bulkDisplayToggle}">
+                                                <li><a (click)="bulkChangeAll(true)">All selected</a></li>
+                                                <li><a (click)="bulkChangeAll(false)">None selected</a></li>                                                
+                                            </ul>     
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="bulk-edit-toolbar-item">
+                                <label>EDIT</label>
+                                <div class="bulk-edit-privacy-control">
+<div [ngClass]="{'relative' : modal == false}" id="privacy-bar">
+    <ul class="privacyToggle" (mouseenter)="commonSrvc.showPrivacyHelp(none +'-privacy', $event, 145)" (mouseleave)="commonSrvc.hideTooltip(none +'-privacy')">
+        <li class="publicActive" [ngClass]="{publicInActive: none != 'PUBLIC'}"><a (click)="setBulkGroupPrivacy('PUBLIC', $event)"></a></li>
+        <li class="limitedActive" [ngClass]="{limitedInActive: none != 'LIMITED'}"><a (click)="setBulkGroupPrivacy('LIMITED', $event)"></a></li>
+        <li class="privateActive" [ngClass]="{privateInActive: none != 'PRIVATE'}"><a (click)="setBulkGroupPrivacy('PRIVATE', $event)"></a></li>
+    </ul>
+</div>
+<div class="popover-help-container">
+   <div class="popover top privacy-myorcid3" [ngClass]="commonSrvc.shownElement[none +'-privacy'] == true ? 'block' : ''">
+        <div class="arrow"></div>
+        <div class="popover-content">
+            <strong>Who can see this? </strong>
+            <ul class="privacyHelp">
+                <li class="public" style="color: #009900;">everyone</li>
+                <li class="limited" style="color: #ffb027;">trusted parties</li>
+                <li class="private" style="color: #990000;">only me</li>
+            </ul>
+           <a href="https://support.orcid.org/hc/articles/360006897614" target="privacyToggle.help.more_information">More information on visibility settings</a>
+        </div>                
+    </div>                              
+</div>
+                                </div>                    
+                            </li>                   
+                        </ul>
+                        <div class="bulk-edit-delete">
+                            <div class="centered">
+                                <a (click)="deleteBulkConfirm()" class="ignore toolbar-button edit-item-button" (mouseenter)="showTooltip('Bulk-Edit')" (mouseleave)="hideTooltip('Bulk-Edit')">
+                                    <span class="edit-option-toolbar glyphicon glyphicon-trash"></span>
+                                </a>
+                                <div class="popover popover-tooltip top bulk-edit-popover" *ngIf="showElement['Bulk-Edit']">
+                                    <div class="arrow"></div>
+                                    <div class="popover-content">
+                                        <span>DELETE</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>              
+                </div>              
+            </div>
+        </div>
+        <!--End bulk edit-->
+        <!-- Bibtex export -->        
+        <div *ngIf="showBibtexExport && workspaceSrvc.displayWorks" class="bibtex-box">
+            <div *ngIf="canReadFiles" >
+                <h4>Export BibTeX</h4><span (click)="toggleBibtexExport()" class="hide-importer">Hide BibTex exporter</span>
+                <div class="row full-height-row">
+                    <div class="col-md-9 col-sm-9 col-xs-8">
+                        <p>
+                            Export your works to a BibTeX file (note, this may cause problems for text in some languages). <a href="https://support.orcid.org/hc/articles/360006971453" target="exporting_bibtex" style="word-break\: normal;">Find out more on exporting BibTeX files</a>.
+                        </p> 
+                    </div>
+                    <div class="col-md-3 col-sm-3 col-xs-4">
+                        <span class="bibtext-options">                                        
+                            <a class="bibtex-cancel" (click)="toggleBibtexExport()">Cancel</a>             
+                            <span *ngIf="!(worksFromBibtex?.length > 0)" class="import-label" (click)="fetchBibtexExport()">Export</span>                   
+                        </span>                   
+                    </div>
+                </div>
+            </div>
+            <div class="bottomBuffer" *ngIf="bibtexExportLoading && !bibtexExportError" >
+                <span class="dotted-bar"></span>
+                <ul class="inline-list">
+                    <li>
+Generating BibTeX. This can take a few minutes...                    </li>
+                    <li>
+                        &nbsp;<span><i id="" class="glyphicon glyphicon-refresh spin x1 green"></i></span>    
+                    </li>
+                </ul>
+            </div>
+    
+            <div class="alert alert-block" *ngIf="bibtexExportError">
+                <strong>Something went wrong while generating your BibTex file.  Please try again.</strong>
+            </div>
+          
+        </div>   
+        <!--End bibtex export-->
+        <!-- Bibtex Importer Wizard -->
+        <div *ngIf="showBibtexImportWizard && workspaceSrvc.displayWorks"  class="bibtex-box">
+            <div *ngIf="canReadFiles" >
+                <h4>Import BibTeX</h4><span (click)="openBibTextWizard()" class="hide-importer">Hide import BibTeX</span>
+                <div class="row full-height-row">
+                    <div class="col-md-9 col-sm-9 col-xs-8">
+                        <p>
+                            Import citations from BibTeX (.bib) files, including files exported from Google Scholar. More information on   <a href="https://support.orcid.org/hc/articles/360006973353" target="workspace.bibtexImporter.learnMore">importing BibTeX files</a>.
+                        </p> 
+                    </div>
+                    <div class="col-md-3 col-sm-3 col-xs-4">
+                        <span class="bibtext-options">                                        
+                            <a class="bibtex-cancel" (click)="openBibTextWizard()">Cancel</a>            
+                            <label for="inputBibtex" *ngIf="!(worksFromBibtex?.length > 0)" class="import-label" >Choose file</label>
+                            <span *ngIf="worksFromBibtex?.length > 0" class="import-label" (click)="saveAllFromBibtex()">Save all</span>                                     
+                            <input id="inputBibtex" name="textFiles" type="file" class="upload-button" accept="*" (change)="loadBibtexJs($event)" app-file-text-reader multiple/>
+
+                        </span>                   
+                    </div>
+                </div>
+            </div> 
+            <div class="bottomBuffer text-center" *ngIf="bibtexImportLoading && !bibtexParsingError" >
+                <i class="glyphicon glyphicon-refresh spin x4 green" id="spinner"></i>
+            </div>          
+            <div class="alert alert-block" *ngIf="bibtexParsingError">
+                <strong>This file cannot be read. Please check the BibTeX formatting and try again.</strong>
+            </div>
+            <span class="dotted-bar" *ngIf="worksFromBibtex?.length > 0"></span>
+            <!-- Bibtex Import Results List -->
+            <ng-container *ngIf="!bibtexImportLoading">
+                <div *ngFor="let work of worksFromBibtex; let index = index; let first = first; let last = last;" class="bottomBuffer">             
+                    <div class="row full-height-row">   
+                        <div class="col-md-9 col-sm-9 col-xs-7">
+                            <h3 class="workspace-title" [ngClass]="work.title?.value == null ? 'bibtex-content-missing' :  ''">
+                                <span *ngIf="work.title?.value != null">{{work.title.value}}</span>
+                                <span *ngIf="work.title?.value == null">&lt;TITLE MISSING&gt;</span>
+                                <span class="journaltitle" *ngIf="work.journalTitle?.value">{{work.journalTitle.value}}</span>
+                            </h3>
+
+                            <div class="info-detail">
+                                <span *ngIf="work.publicationDate.year">{{work.publicationDate.year}}</span><span *ngIf="work.publicationDate?.month">-{{work.publicationDate.month}}</span><span *ngIf="work.publicationDate?.day">-</span><span *ngIf="work.publicationDate?.day">{{work.publicationDate.day}}</span><span *ngIf="work.publicationDate.year"> | </span>
+                      
+                                <span class="capitalize" *ngIf="work.workType?.value?.length > 0">{{work.workType.value}}</span>
+                                <span class="bibtex-content-missing small-missing-info" *ngIf="work.workType?.value.length == 0">&lt;TYPE MISSING&gt;</span>
+
+                            </div>
+                            <div class="row" *ngIf="work?.workExternalIdentifiers[0]?.externalIdentifierId?.value">
+                                <div class="col-md-12 col-sm-12 bottomBuffer">
+                                    <ul class="id-details">
+                                        <li class="url-work">
+                                            <ul class="id-details">
+                                                <li *ngFor='let extID of work.workExternalIdentifiers | orderBy:["relationship.value", "externalIdentifierType.value"]; let index = index; let first = first; let last = last;' class="url-popover">
+                                                    <span *ngIf="work?.workExternalIdentifiers[0]?.externalIdentifierId?.value?.length > 0">
+                                                        <ext-id-popover-ng2 [extID]="extID" [putCode]="'bibtexWork'+i" [activityType]="'work'"></ext-id-popover-ng2>
+                                                    </span>
+                                                </li>
+                                            </ul>                                   
+                                        </li>
+
+                                        <li *ngIf="work.url?.value" class="url-popover url-work">
+                                            URL: <a href="{{work.url.value | urlProtocol}}" (mouseenter)="showURLPopOver('bibtexWork'+index)" (mouseleave)="hideURLPopOver('bibtexWork'+index)" [ngClass]="{'truncate-anchor' : moreInfo[group?.groupId] == false || moreInfo[group?.groupId] == undefined}" target="work.url.value">{{work.url.value}}</a>
+                                            <div class="popover-pos">                                   
+                                                <div class="popover-help-container">
+                                                    <div class="popover bottom" [ngClass]="{'block' : displayURLPopOver['bibtexWork'+index] == true}">
+                                                        <div class="arrow"></div>
+                                                        <div class="popover-content">
+                                                            <a href="{{work.url.value}}" target="work.url.value">{{work.url.value}}</a>
+                                                        </div>                
+                                                    </div>                              
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>                          
+                        <div class="col-md-3 col-sm-3 col-xs-3 bibtex-options-menu">                   
+                            <ul>
+                                <li><a (click)="rmWorkFromBibtex(work)" class="ignore glyphicon glyphicon-trash bibtex-button" title="Ignore"></a></li>
+                                <li><a *ngIf="work?.errors?.length == 0" (click)="addWorkFromBibtex(work)" class="save glyphicon glyphicon-floppy-disk bibtex-button" title="Save"></a></li>
+                                <li><a *ngIf="work?.errors?.length > 0" (click)="editWorkFromBibtex(work)" class="save glyphicon glyphicon-pencil bibtex-button" title="Edit"></a></li>
+                                <li><span *ngIf="work?.errors?.length > 0"><a (click)="editWorkFromBibtex(work)"><i class="glyphicon glyphicon-exclamation-sign"></i>Needs edit</a></span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+        <!--End bibtex import wizard-->
+        <!--Works list-->
+        <div *ngIf="workspaceSrvc.displayWorks" class="workspace-accordion-content">
+            <ul *ngIf="worksService?.groups?.length" class="workspace-publications bottom-margin-medium" id="body-work-list">
+                <li class="bottom-margin-small workspace-border-box card" *ngFor="let group of worksService.groups">
+<div class="work-list-container">
+    <ul class="sources-edit-list">
+        <!--Edit sources-->
+        <li *ngIf="editSources[group.groupId]" class="source-header" [ngClass]="{'source-active' : editSources[group.groupId] == true}">
+            <div class="sources-header">
+                <div class="row">
+                    <div class="col-md-7 col-sm-7 col-xs-6">
+                        Sources <span class="hide-sources" (click)="hideSources(group)">Close sources</span>
+                    </div>
+                    
+                    <div class="col-md-2 col-sm-2 hidden-xs">
+Preferred                    </div>
+                    
+                    <div class="col-md-3 col-sm-3 col-xs-6 right padding-left-fix">
+                        <div class="workspace-toolbar">
+                            <ul class="workspace-private-toolbar">
+                                <li class="works-details">
+                                    <a (click)="showDetailsMouseClick(group,$event)" (mouseenter)="showTooltip(group?.groupId+'-showHideDetails')" (mouseleave)="hideTooltip(group?.groupId+'-showHideDetails')">
+                                        <span [ngClass]="(moreInfo[group?.groupId] == true) ? 'glyphicons collapse_top' : 'glyphicons expand'">
+                                        </span>
+                                    </a>
+                                    <div class="popover popover-tooltip top show-hide-details-popover" *ngIf="showElement[group.groupId+'-showHideDetails']">
+                                        <div class="arrow"></div>
+                                        <div class="popover-content">   
+                                            <span *ngIf="moreInfo[group.groupId] == false || moreInfo[group.groupId] == null">Show Details</span>   
+                                            <span *ngIf="moreInfo[group.groupId]">Hide Details</span>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <!--End edit sources-->
+        <!---Work info-->
+        <ng-container *ngFor="let work of group.works; let index = index; let first = first; let last = last;">
+            <li *ngIf="group.activePutCode == work.putCode.value || editSources[group.groupId] == true">
+                <div class="row" *ngIf="group.activePutCode == work.putCode?.value">
+                    <div class="col-md-9 col-sm-9 col-xs-7">
+                        <h3 class="workspace-title leftBuffer">
+                            <span>{{work.title.value}}</span>
+                            <span class="journaltitle" *ngIf="work.journalTitle?.value">{{work.journalTitle.value}}</span>                                
+                        </h3>                                                        
+                        <div class="info-detail">
+                            <span *ngIf="work.publicationDate?.year">{{work.publicationDate.year}}</span><span *ngIf="work.publicationDate?.month">-{{work.publicationDate.month}}</span><span *ngIf="work.publicationDate?.day">-</span><span *ngIf="work.publicationDate?.day">{{work.publicationDate.day}}</span><span *ngIf="work.publicationDate?.year"> | </span> <span class="capitalize">{{work.workType.value}}</span>
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-3 col-sm-3 col-xs-5 workspace-toolbar">
+                        <ul class="workspace-private-toolbar" *ngIf="!editSources[group.groupId]"> 
+
+                            <!--Bulk edit checkbox-->             
+                            <!--Show details toggle-->
+                            <li class="works-details" *ngIf="!editSources[group.groupId]">
+                                <a (click)="showDetailsMouseClick(group,$event)" (mouseenter)="showTooltip(group?.groupId+'-showHideDetails')" (mouseleave)="hideTooltip(group?.groupId+'-showHideDetails')">
+                                    <span [ngClass]="(moreInfo[group?.groupId] == true) ? 'glyphicons collapse_top' : 'glyphicons expand'">
+                                    </span>
+                                </a>
+                                <div class="popover popover-tooltip top show-hide-details-popover" *ngIf="showElement[group.groupId+'-showHideDetails']">
+                                    <div class="arrow"></div>
+                                    <div class="popover-content">
+                                        <span *ngIf="moreInfo[group.groupId] == false || moreInfo[group.groupId] == null">Show Details</span>   
+                                        <span *ngIf="moreInfo[group.groupId]">Hide Details</span>
+                                    </div>
+                                </div>
+                            </li>
+                            <!--Visibility selector-->
+                        </ul>
+                        <!--Inconsistent visibility warning-->  
+                    </div>
+                </div>
+                <!--Identifiers-->
+                <div class="row" *ngIf="group.activePutCode == work.putCode.value">
+                    <div class="col-md-12 col-sm-12 bottomBuffer">
+                        <ul class="id-details clearfix">
+                            <li class="url-work clearfix">
+                                <ul class="id-details clearfix">
+                                    <li *ngFor='let extID of work?.workExternalIdentifiers;let i = index;trackBy:trackByIndex | orderBy:["relationship.value", "type.value"]' class="url-popover">
+                                        <span *ngIf="work?.workExternalIdentifiers[0]?.externalIdentifierId?.value?.length > 0">
+                                            <ext-id-popover-ng2 [extID]="extID" [putCode]="work.putCode.value+i" [activityType]="'work'"></ext-id-popover-ng2>
+                                        </span>
+                                     </li>
+                                </ul>                                   
+                            </li>
+                            <li *ngIf="work.url?.value" class="url-popover url-work">
+                                URL: <a href="{{work.url.value | urlProtocol}}" (mouseenter)="showURLPopOver(work.putCode.value)" (mouseleave)="hideURLPopOver(work.putCode.value)" [ngClass]="{'truncate-anchor' : moreInfo[group.groupId] == false || moreInfo[group.groupId] == undefined}" target="work.url.value">{{work.url.value}}</a>
+                                <div class="popover-pos">          
+                                    <div class="popover-help-container">
+                                        <div class="popover bottom" [ngClass]="{'block' : displayURLPopOver[work.putCode.value] == true}">
+                                            <div class="arrow"></div>
+                                            <div class="popover-content">
+                                                <a href="{{work.url.value}}" target="work.url.value">{{work.url.value}}</a>
+                                            </div>                
+                                        </div>                              
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="more-info" *ngIf="moreInfo[group?.groupId] && group.activePutCode == work.putCode.value">
+                    <div id="ajax-loader" *ngIf="worksService.details[work.putCode.value] == undefined">
+                        <span id="ajax-loader"><i id="ajax-loader" class="glyphicon glyphicon-refresh spin x4 green"></i></span>
+                    </div>
+                    
+                    <div class="content" *ngIf="worksService.details[work.putCode.value] != undefined">  
+                        
+                        <span class="dotted-bar"></span>
+                        <div class="row">       
+                            <div class="col-md-6" *ngIf="worksService.details[work.putCode.value].translatedTitle?.content" >
+                                <div class="bottomBuffer">
+                                    <strong>Translated title</strong> <span><i>({{worksService.details[work.putCode.value].translatedTitle.languageName}})</i></span>
+                                    <div>{{worksService.details[work.putCode.value].translatedTitle.content}}</div>                
+                                </div>
+                            </div>
+                            <div class="col-md-6" *ngIf="worksService.details[work.putCode.value].languageCode?.value" >
+                                <div class="bottomBuffer">                  
+                                    <strong>Language</strong>
+                                    <div>{{worksService.details[work.putCode.value].languageName.value}}</div>                  
+                                </div>
+                            </div>
+                            <div class="col-md-6" *ngIf="worksService.details[work.putCode.value].subtitle?.value" >
+                                <div class="bottomBuffer">
+                                    <strong> Subtitle </strong>
+                                    <div>{{worksService.details[work.putCode.value].subtitle.value}}</div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6" *ngIf="worksService.details[work.putCode.value].url?.value" >
+
+                                <div class="bottomBuffer">
+                                    <strong>
+URL                                    </strong>
+                                    <div>
+                                        <a href="{{worksService.details[work.putCode.value].url.value | urlProtocol}}" target="url.value">{{worksService.details[work.putCode.value].url.value}}</a>
+                                    </div>              
+                                </div>
+                            </div>          
+                        </div>                  
+                        <div class="row bottomBuffer" *ngIf="worksService.details[work.putCode.value].citation?.citation?.value" >
+                            <div class="col-md-12">             
+                                <strong>Citation</strong> <span> (<span *ngIf="worksService.details[work.putCode.value].citation?.citationType?.value" ><i>{{worksService.details[work.putCode.value].citation.citationType.value}}</i></span>) 
+                                </span>
+                                <span *ngIf="showBibtex[work.putCode.value] && worksService.details[work.putCode.value].citation?.citationType?.value == 'bibtex'">
+                                    <a class="toggle-tag-option" (click)="bibtexShowToggle(work.putCode.value)">
+                                        [Switch view]
+                                    </a>
+                                </span>
+                                <span *ngIf="(showBibtex[work.putCode.value] == null || showBibtex[work.putCode.value] == false) && worksService.details[work.putCode.value].citation?.citationType?.value == 'bibtex'">
+                                    <a class="toggle-tag-option" (click)="bibtexShowToggle(work.putCode.value)">
+                                        [Switch view]
+                                    </a>
+                                </span>
+                                
+                            </div>
+                            <div class="col-md-12">
+                            
+                                <div *ngIf="worksService.details[work.putCode.value].citation?.citationType?.value != 'bibtex'">
+                                    <span>
+                                        {{worksService.details[work.putCode.value].citation.citation.value}}
+                                    </span>
+                                </div>
+                                
+                                <div *ngIf="(showBibtex[work.putCode.value] == null || showBibtex[work.putCode.value] == false) && worksService.details[work.putCode.value].citation?.citationType?.value == 'bibtex'" 
+                                     class="col-md-offset-1 col-md-11 col-sm-offset-1 col-sm-11 col-xs-12 citation-raw">{{worksService.details[work.putCode.value].citation.citation.value}}
+                                </div>
+                                                    
+                                <div class="row" *ngIf="showBibtex[work.putCode.value] && (worksService.bibtexJson[work.putCode.value]==null || worksService.bibtexJson[work.putCode.value].length==0)">
+                                    <div class="col-md-offset-1 col-md-6">View not available</div>
+                                </div>
+                                
+                                
+                                <div class="row" *ngFor='let bibJSON of worksService.bibtexJson[work.putCode.value]; let index = index; let first = first; let last = last;'>    
+                                    <div *ngIf="showBibtex[work.putCode.value]">
+                                        <div class="col-md-offset-1 col-md-2 col-sm-offset-1 col-sm-1 col-xs-offset-1 col-xs-4">{{bibJSON.entryType}}</div>
+                                        <div class="col-md-8 col-sm-9 col-xs-offset-1 col-xs-6">{{bibJSON.citationKey}}</div>                               
+                                        <div *ngFor="let bibEntry of bibJSON.entryTags">
+                                            <div *ngFor="let tag of bibEntry | keys">
+                                            <div class="col-md-offset-1 col-md-2 col-sm-offset-1 col-sm-1 col-xs-offset-1 col-xs-4">{{tag.key}}</div>
+                                            <div class="col-md-8 col-sm-9 col-xs-offset-1 col-xs-6">{{tag.value | latex}}</div>
+                                            </div>
+                                        </div>   
+                                    </div>                 
+                                </div>                      
+                            </div>
+                        </div>
+                        <div class="row bottomBuffer" *ngIf="worksService.details[work.putCode.value].shortDescription?.value"
+                            >
+                            <div class="col-md-12">
+                                <strong> Description </strong>
+                                <div style="white-space: pre-wrap;">{{worksService.details[work.putCode.value].shortDescription.value}}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="row bottomBuffer">
+                            <div class="col-md-6" *ngIf="worksService.details[work.putCode.value].countryCode?.value" >
+
+                                <div class="bottomBuffer">
+                                    <strong>Country of publication</strong>
+                                    <div>{{worksService.details[work.putCode.value].countryName.value}}</div>
+                                </div>
+                            </div>          
+                            <div class="col-md-6" *ngIf="worksService.details[work.putCode.value].contributors?.length > 0" >
+                                <div class="bottomBuffer">          
+                                    <strong> Contributor </strong>
+                                    <div *ngFor="let contributor of worksService.details[work.putCode.value].contributors; let index = index; let first = first; let last = last;">
+                                        {{contributor.creditName?.value}} <span>{{contributor | contributorFilter}}</span>
+                                    </div>
+                                </div>                                      
+                            </div> 
+                        </div>
+                        <!--Added/last modified dates-->                
+                        <div class="row bottomBuffer">
+                            <div class="col-md-6">
+                                <div class="bottomBuffer">
+                                    <strong>Added</strong><br> 
+                                    <span>{{worksService.details[work.putCode.value].createdDate | ajaxFormDateToISO8601}}</span>
+                                </div>    
+                            </div>
+                            <div class="col-md-6">
+                                <div class="bottomBuffer">
+                                    <strong>Last modified</strong><br> 
+                                    <span>{{worksService.details[work.putCode.value].lastModified | ajaxFormDateToISO8601}}</span>
+                                </div>    
+                            </div>      
+                        </div><!--Added/last modified dates--> 
+                        
+                    </div>  
+                </div>
+
+                <div class="row source-line" *ngIf="group.activePutCode == work.putCode.value">
+                    <!--Edit sources-->
+                    <div class="col-md-7 col-sm-7 col-xs-12" *ngIf="editSources[group.groupId]">
+                        {{(work.sourceName == null || work.sourceName == '') ? work.source : work.sourceName }}
+                    </div>
+                    <div class="col-md-3 col-sm-3 col-xs-10" *ngIf="editSources[group.groupId]">
+                        <div *ngIf="editSources[group.groupId]">
+                            <span class="glyphicon glyphicon-check" *ngIf="work.putCode.value == group.defaultPutCode"></span><span *ngIf="work.putCode.value == group.defaultPutCode"> Preferred source</span>
+                            
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-sm-2 trash-source" *ngIf="editSources[group.groupId]">
+                        <div *ngIf="editSources[group.groupId]">
+                        </div>
+                    </div>
+                    <!--Edit sources-->
+                </div>
+                <div *ngIf="group.activePutCode != work.putCode.value" class="row source-line">
+                    <div class="col-md-7 col-sm-7 col-xs-12">
+                        <a (click)="group.activePutCode = work.putCode.value">                                
+                            {{(work.sourceName == null || work.sourceName == '') ? work.source : work.sourceName }}
+                        </a>
+                    </div>                                        
+                    <div class="col-md-3 col-sm-3 col-xs-10">
+                    </div>
+                    <!--Action buttons-->
+                    <div class="col-md-2 col-sm-2 col-xs-2 trash-source">
+                    </div>
+                </div> 
+                <div class="row source-line" *ngIf="!editSources[group.groupId]">                        
+                    <div class="col-md-7 col-sm-7 col-xs-12">
+                        Source: {{(work.sourceName == null || work.sourceName == '') ? work.source : work.sourceName }}
+                    </div>
+                    
+                    <div class="col-md-3 col-sm-3 col-xs-9">
+                        <span class="glyphicon glyphicon-check"></span><span> Preferred source</span> <span *ngIf="group?.works?.length != 1"> (</span><a (click)="showSources(group, $event)" *ngIf="group?.works?.length != 1" (mouseenter)="showTooltip(group.groupId+'-sources')" (mouseleave)="hideTooltip(group.groupId+'-sources')">of {{group.works.length}}</a><span *ngIf="group?.works?.length != 1">)</span>
+
+                        <div class="popover popover-tooltip top sources-popover" *ngIf="showElement[group.groupId+'-sources']">
+                            <div class="arrow"></div>
+                            <div class="popover-content">
+Show other sources                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-2 col-sm-2 col-xs-3" *ngIf="group.activePutCode == work.putCode.value">
+                        <ul class="sources-options" >
+                        </ul>
+                    </div>
+                </div>
+            </li>
+        </ng-container>
+    </ul>
+</div>                </li>
+            </ul>
+            <button *ngIf="worksService.showLoadMore" (click)="loadMore()" class="btn btn-primary">Load more</button>
+            <div *ngIf="worksService?.loading" class="text-center" id="workSpinner">
+                <i class="glyphicon glyphicon-refresh spin x4 green" id="spinner"></i>
+            </div>
+            <div *ngIf="worksService?.loading == false && worksService?.groups?.length == 0">
+                <strong>
+                    No publications added yet                </strong>
+            </div>          
+        </div>
+    </div>
+</script> <works-ng2 publicview="true" ng-version="6.0.4"><div class="workspace-accordion-item workspace-accordion-active" id="workspace-publications"><div class="workspace-accordion-header clearfix"><div class="row"><div class="col-md-3 col-sm-3 col-xs-12"><div><a class="toggle-text"><i class="glyphicon-chevron-down glyphicon x075"></i> Works (<span></span>) </a></div></div><!----><div class="col-md-9 col-sm-9 col-xs-12 action-button-bar"><div class="menu-container"><ul class="toggle-menu"><li><span class="glyphicon glyphicon-sort"></span>
+Sort <ul class="menu-options sort"><!----><li class="checked"><a class="action-option manage-button">
+Date <!----><span class="glyphicon glyphicon-sort-by-order-alt"></span><!----></a></li><!----><!----><li><a class="action-option manage-button">
+Title <!----><!----><span></span></a></li><!----><li><a class="action-option manage-button">
+Type <!----><!----><span></span></a></li></ul></li></ul></div></div></div></div><!----><!----><!----><!----><!----><div class="workspace-accordion-content"><!----><!----><!----><div class="text-center" id="workSpinner"><i class="glyphicon glyphicon-refresh spin x4 green" id="spinner"></i></div><!----></div></div></works-ng2>
+
+<script type="text/ng-template" id="last-modified-ng2-template"> 
+    <div id="public-last-modified">
+        <p class="small italic">Record last modified Jan 10, 2019 2:07:04 PM</p>
+    </div>                
+</script> <last-modified-ng2 ng-version="6.0.4"><div id="public-last-modified"><p class="small italic">Record last modified Jan 10, 2019 2:07:04 PM</p></div></last-modified-ng2>
+</div>
+</div>
+</div>
+</div>
+
+<script type="text/ng-template" id="org-identifier-popover-ng2-template">
+<span *ngIf="!link" class="url-popover">
+    {{displayType}}: {{value}}
+</span>
+<span *ngIf="link" class="url-popover">
+    {{displayType}}: <a href="{{link}}" class="truncate-anchor" target="orcid.blank" rel="noopener norefferer" (mouseenter)="showURLPopOver(putCode)" (mouseleave)="hideURLPopOver(putCode)">{{value}}</a>
+    <div class="popover-pos">
+        <div class="popover-help-container">
+            <div class="popover bottom" [ngClass]="{'block' : displayURLPopOver[putCode] == true}">
+                <div class="arrow"></div>
+                <div class="popover-content">
+                    <a href="{{link}}" target="orcid.blank" class="ng-binding">{{link}}</a>
+                </div>
+            </div>
+        </div>
+  </div>
+</span>
+<div *ngIf="commonSrvc.orgDisambiguatedDetails[type+value]" class="col-md-11 bottomBuffer info-detail leftBuffer clearfix">
+    <!--Org disambiguated name-->
+    <span *ngIf="commonSrvc.orgDisambiguatedDetails[type+value]?.value">{{commonSrvc.orgDisambiguatedDetails[type+value]?.value}}</span>
+
+    <!--Org disambiguated city-->
+    <span *ngIf="commonSrvc.orgDisambiguatedDetails[type+value]?.city || commonSrvc.orgDisambiguatedDetails[type+value]?.region || commonSrvc.orgDisambiguatedDetails[type+value]?.country">: </span>
+
+    
+    <span *ngIf="commonSrvc.orgDisambiguatedDetails[type+value]?.city">{{commonSrvc.orgDisambiguatedDetails[type+value]?.city}}</span>
+
+    <!--Org disambiguated region-->
+    <span *ngIf="commonSrvc.orgDisambiguatedDetails[type+value]?.city && commonSrvc.orgDisambiguatedDetails[type+value]?.region">, </span>
+
+    
+    <span *ngIf="commonSrvc.orgDisambiguatedDetails[type+value]?.region">{{commonSrvc.orgDisambiguatedDetails[type+value]?.region}}</span>
+
+    <!--Org disambiguated country-->
+    <span *ngIf="commonSrvc.orgDisambiguatedDetails[type+value]?.country && (commonSrvc.orgDisambiguatedDetails[type+value]?.city || commonSrvc.orgDisambiguatedDetails[type+value]?.region)">, </span>
+    <span *ngIf="commonSrvc.orgDisambiguatedDetails[type+value]?.country">{{commonSrvc.orgDisambiguatedDetails[type+value]?.country}}</span>
+
+    <!--Org disambiguated URL-->
+    <span *ngIf="commonSrvc.orgDisambiguatedDetails[type+value]?.url"><br>
+        <a href="{{commonSrvc.orgDisambiguatedDetails[type+value]?.url}}" target="url">
+        <span>{{commonSrvc.orgDisambiguatedDetails[type+value]?.url}}</span></a>
+    </span> 
+
+    <!--Org disambiguated ext ids-->
+    <div *ngIf="commonSrvc.orgDisambiguatedDetails[type+value]?.orgDisambiguatedExternalIdentifiers">
+        <strong>Other organization identifiers provided by {{displayType}}</strong><br>
+        <ul class="reset">
+            <li *ngFor="let orgDisambiguatedExternalIdentifier of commonSrvc.orgDisambiguatedDetails[type+value]?.orgDisambiguatedExternalIdentifiers">
+                {{orgDisambiguatedExternalIdentifier.identifierType}}: <span *ngIf="orgDisambiguatedExternalIdentifier.preferred">{{orgDisambiguatedExternalIdentifier.preferred}} (preferred)</span> 
+                <!-- Put the ',' only if there is more than one ext id or if the only one is not the same as the preferred one -->
+                <span *ngIf="orgDisambiguatedExternalIdentifier.all && (orgDisambiguatedExternalIdentifier.all.length > 1 || (orgDisambiguatedExternalIdentifier.preferred && (orgDisambiguatedExternalIdentifier.all[0] != orgDisambiguatedExternalIdentifier.preferred)))">,</span>   
+                <span *ngIf="orgDisambiguatedExternalIdentifier.all">
+                    <span *ngFor="let orgDisambiguatedExternalIdentifierAll of orgDisambiguatedExternalIdentifier.all;let last = last">
+                        <span *ngIf="orgDisambiguatedExternalIdentifierAll != orgDisambiguatedExternalIdentifier.preferred">{{orgDisambiguatedExternalIdentifierAll}}{{last ? '' : ', '}}</span>                                        
+                    </span>
+                </span>
+            </li>
+        </ul>
+    </div>  
+</div>             
+</script>
+</div>
+</div>
+
+<div id="footer" class="footer clear-fix">
+<span id="noop"> </span>
+<div class="container">
+<div class="row">
+<div class="col-md-11 col-md-offset-1">
+<ul class="col-md-11 col-md-offset-1">
+<li class=""><a href="https://orcid.org/help/contact-us">Contact us</a></li>
+<li class=""><a href="https://orcid.org/footer/privacy-policy">Privacy Policy</a></li>
+<li class=""><a href="https://orcid.org/content/orcid-terms-use">Terms of Use</a></li>
+<li class=""><a href="https://orcid.org/open-source-license">Open Source Project</a></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<form action="/" class="ng-pristine ng-valid">
+<input id="imageUrl" type="hidden" value="//orcid.org/static/release-1.251.0/images" autocomplete="off">
+</form>
+<script type="text/javascript" src="//orcid.org/static/release-1.251.0/javascript/jquery/2.2.3/jquery.min.js"></script>
+<script type="text/javascript" src="//orcid.org/static/release-1.251.0/javascript/jqueryui/1.10.0/jquery-ui.min.js"></script>
+<script type="text/javascript" src="//orcid.org/static/release-1.251.0/javascript/jquery-migrate/1.3.0/jquery-migrate-1.3.0.min.js"></script>
+<script type="text/javascript">
+    // CSRF
+    var token = $("meta[name='_csrf']").attr("content");
+    var header = $("meta[name='_csrf_header']").attr("content");    
+    if (header && token){
+	    $(document).ajaxSend(function(e, xhr, options) {
+	        if (options.type != "GET") {
+	           if (   options.url.startsWith(orcidVar.baseUri)
+	               || options.url.startsWith(orcidVar.baseUriHttp)
+	               || options.url.startsWith('/')) {
+	               xhr.setRequestHeader(header, token);
+	           };
+	        };
+	    });
+    }
+</script>
+<script type="text/javascript" src="//orcid.org/static/release-1.251.0/javascript/typeahead/0.9.3/typeahead.min.js"></script>
+<script type="text/javascript" src="//orcid.org/static/release-1.251.0/javascript/plugins.js"></script>
+<script type="text/javascript" src="//orcid.org/static/release-1.251.0/javascript/orcid.js"></script>
+<script type="text/javascript" src="//orcid.org/static/release-1.251.0/javascript/script.js"></script>
+<script src="//orcid.org/static/release-1.251.0/javascript/ng1Orcid/angular_orcid_generated.js"></script>
+<script type="text/javascript">
+    var lang = OrcidCookie.getCookie('locale_v3');
+</script>
+<script type="text/javascript">
+        var lang = OrcidCookie.getCookie('locale_v3');
+        var script = document.createElement("script");
+        script.type = "text/javascript";
+        script.src = "https://www.google.com/recaptcha/api.js?onload=vcRecaptchaApiLoaded&render=explicit&hl=" + lang;
+        document.body.appendChild(script);
+    </script><script type="text/javascript" src="https://www.google.com/recaptcha/api.js?onload=vcRecaptchaApiLoaded&amp;render=explicit&amp;hl=undefined"></script>
+
+
+
+<script id="ze-snippet" src="https://static.zdassets.com/ekr/snippet.js?key=b8313acd-6439-4894-b431-8c5a2ae9e7cb"> </script>
+
+
+<div id="cboxOverlay" style="display: none;"></div><div id="colorbox" class="" role="dialog" tabindex="-1" style="display: none;"><div id="cboxWrapper"><div><div id="cboxTopLeft" style="float: left;"></div><div id="cboxTopCenter" style="float: left;"></div><div id="cboxTopRight" style="float: left;"></div></div><div style="clear: left;"><div id="cboxMiddleLeft" style="float: left;"></div><div id="cboxContent" style="float: left;"><div id="cboxTitle" style="float: left;"></div><div id="cboxCurrent" style="float: left;"></div><button type="button" id="cboxPrevious"></button><button type="button" id="cboxNext"></button><button type="button" id="cboxSlideshow"></button><div id="cboxLoadingOverlay" style="float: left;"></div><div id="cboxLoadingGraphic" style="float: left;"></div></div><div id="cboxMiddleRight" style="float: left;"></div></div><div style="clear: left;"><div id="cboxBottomLeft" style="float: left;"></div><div id="cboxBottomCenter" style="float: left;"></div><div id="cboxBottomRight" style="float: left;"></div></div></div><div style="position: absolute; width: 9999px; visibility: hidden; display: none; max-width: none;"></div></div><iframe data-product="web_widget" title="No content" tabindex="-1" aria-hidden="true" src="about:blank" style="width: 0px; height: 0px; border: 0px; position: absolute; top: -9999px;"></iframe>
